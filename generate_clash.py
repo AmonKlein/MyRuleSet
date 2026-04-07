@@ -1,7 +1,7 @@
 import os
 
 SURGE_DIR = "Surge/Ruleset"
-CLASH_DIR = "Clash/Ruleset"
+CLASH_DIR = "Clash"
 
 for root, dirs, files in os.walk(SURGE_DIR):
     for file in files:
