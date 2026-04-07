@@ -2,39 +2,47 @@ name: Sync Surge and Generate Clash
 
 on:
   schedule:
-    - cron: "0 */6 * * *"   # 每6小时更新一次
-  workflow_dispatch:       # 手动触发
+    - cron: "0 */6 * * *"   # 每 6 小时同步一次
+  workflow_dispatch:         # 支持手动触发
 
 jobs:
   sync:
     runs-on: ubuntu-latest
 
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true  # 避免 Node.js 20 警告
+
     steps:
+      # 1️⃣ 检出你的仓库
       - name: Checkout your repo
         uses: actions/checkout@v4
 
+      # 2️⃣ 克隆上游仓库的实际 master 分支
       - name: Clone upstream repo
         run: |
-          git clone --depth=1 https://github.com/ConnersHua/RuleGo/tree/master.git upstream
+          git clone --branch master --depth=1 https://github.com/ConnersHua/RuleGo.git upstream
 
+      # 3️⃣ 拷贝 Surge 文件夹
       - name: Copy Surge folder
         run: |
           rm -rf Surge
           cp -r upstream/Surge ./Surge
 
+      # 4️⃣ 设置 Python
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: 3.x
 
+      # 5️⃣ 执行脚本生成 Clash
       - name: Generate Clash rules
-        run: |
-          python generate_clash.py
+        run: python generate_clash.py
 
-      - name: Commit and push
+      # 6️⃣ 自动提交并推送
+      - name: Commit and push changes
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git add .
-          git commit -m "Auto sync and generate Clash rules" || echo "No changes"
+          git commit -m "Auto sync Surge and generate Clash rules" || echo "No changes"
           git push
