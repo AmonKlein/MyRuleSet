@@ -15,7 +15,7 @@ jobs:
 
       - name: Clone upstream repo
         run: |
-          git clone --depth=1 https://github.com/ConnersHua/RuleGo.git upstream
+          git clone --depth=1 https://github.com/ConnersHua/RuleGo/tree/master.git upstream
 
       - name: Copy Surge folder
         run: |
