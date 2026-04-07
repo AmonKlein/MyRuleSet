@@ -255,6 +255,7 @@ DOMAIN,s3-ap-northeast-1.amazonaws.com
 DOMAIN,s3-ap-southeast-2.amazonaws.com
 DOMAIN,s3-ap-southeast-1.amazonaws.com
 DOMAIN,s3.eu-central-1.amazonaws.com
+# > Alphabet
 # DOMAIN-SUFFIX,ampproject.org
 DOMAIN-SUFFIX,apigee.com
 DOMAIN-SUFFIX,appspot.com
@@ -321,6 +322,7 @@ DOMAIN-SUFFIX,ffbbbdc6d3c353211fe2ba39c9f744cd.com
 # > OKX
 DOMAIN-SUFFIX,okx.com
 DOMAIN-SUFFIX,okx.com.cdn.cloudflare.net
+# ------
 # > Discord
 DOMAIN-SUFFIX,discord.com
 DOMAIN-SUFFIX,discordapp.com
@@ -405,6 +407,7 @@ DOMAIN-SUFFIX,reuters.com
 DOMAIN-SUFFIX,reutersmedia.net
 # > Steam
 DOMAIN-SUFFIX,steamcommunity.com
+# DOMAIN,store.steampowered.com
 # ---(Telegram)---
 DOMAIN-SUFFIX,cdn-telegram.org
 DOMAIN-SUFFIX,comments.app
@@ -422,6 +425,7 @@ DOMAIN-SUFFIX,telegram-cdn.org
 DOMAIN-SUFFIX,telesco.pe
 DOMAIN-SUFFIX,tg.dev
 DOMAIN-SUFFIX,tx.me
+# ------
 # > The Economist
 DOMAIN-SUFFIX,economist.com
 DOMAIN-SUFFIX,static-economist.com
@@ -529,6 +533,7 @@ DOMAIN,news-client-search.apple.com
 DOMAIN,news-edge.apple.com
 DOMAIN,news-events.apple.com
 DOMAIN,apple.comscoreresearch.com
+# ------
 # > Microsoft
 DOMAIN-SUFFIX,bing.com
 DOMAIN-SUFFIX,linkedin.com

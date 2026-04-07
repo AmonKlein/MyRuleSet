@@ -74,6 +74,7 @@ DOMAIN-SUFFIX,googletagmanager.com
 DOMAIN-SUFFIX,google-analytics.com
 DOMAIN,safebrowsing.googleapis.com
 DOMAIN,safebrowsing.googleapis-cn.com
+# > GozenData
 # https://www.v2ex.com/t/772523
 DOMAIN-SUFFIX,gozendata.com
 DOMAIN-SUFFIX,gzads.com
