@@ -17,39 +17,46 @@ for root, dirs, files in os.walk(SURGE_DIR):
 
         domain_rules = []
         ipcidr_rules = []
-
-        last_comment = None  # 暂存注释
+        
+        # 用于临时存储连续的注释行
+        current_comments = []
 
         with open(surge_path, "r", encoding="utf-8") as f:
             for line in f:
-                line = line.rstrip()
+                line = line.strip()
                 if not line:
                     continue
 
-                if line.startswith("#"):
-                    last_comment = line
+                # 1. 如果是注释行，先存入临时列表
+                if line.startswith("#") or line.startswith(";"):
+                    current_comments.append(line)
                     continue
 
+                # 2. 如果是域名规则
                 if line.startswith(("DOMAIN", "DOMAIN-SUFFIX", "DOMAIN-KEYWORD")):
-                    if last_comment:
-                        domain_rules.append(last_comment)
-                        last_comment = None
+                    if current_comments:
+                        domain_rules.extend(current_comments)
+                        current_comments = [] # 用完清空
                     domain_rules.append(line)
+                
+                # 3. 如果是 IP 规则
                 elif line.startswith(("IP-CIDR", "IP-CIDR6")):
-                    if last_comment:
-                        ipcidr_rules.append(last_comment)
-                        last_comment = None
+                    if current_comments:
+                        ipcidr_rules.extend(current_comments)
+                        current_comments = [] # 用完清空
                     ipcidr_rules.append(line)
+                
                 else:
-                    # 其他类型规则可以忽略或者自定义处理
-                    last_comment = None
+                    # 如果遇到了既不是注释也不是匹配规则的行（如 USER-AGENT 等）
+                    # 清空当前暂存的注释，防止注释被错误地带到下一条不相关的规则
+                    current_comments = []
 
         # 写入 domain 文件
         if domain_rules:
             with open(os.path.join(clash_base, f"{name}_domain.list"), "w", encoding="utf-8") as f:
-                f.write("\n".join(domain_rules))
+                f.write("\n".join(domain_rules) + "\n")
 
         # 写入 ipcidr 文件
         if ipcidr_rules:
             with open(os.path.join(clash_base, f"{name}_ipcidr.list"), "w", encoding="utf-8") as f:
-                f.write("\n".join(ipcidr_rules))
+                f.write("\n".join(ipcidr_rules) + "\n")
