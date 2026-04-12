@@ -17,8 +17,8 @@ for root, dirs, files in os.walk(SURGE_DIR):
 
         domain_rules = []
         ipcidr_rules = []
-        
-        # 用于临时存储连续的注释行
+        classical_rules = []
+
         current_comments = []
 
         with open(surge_path, "r", encoding="utf-8") as f:
@@ -27,29 +27,38 @@ for root, dirs, files in os.walk(SURGE_DIR):
                 if not line:
                     continue
 
-                # 1. 如果是注释行，先存入临时列表
+                # 1️⃣ 注释
                 if line.startswith("#") or line.startswith(";"):
                     current_comments.append(line)
                     continue
 
-                # 2. 如果是域名规则
-                if line.startswith(("DOMAIN", "DOMAIN-SUFFIX", "DOMAIN-KEYWORD")):
+                # 2️⃣ DOMAIN 类
+                if line.startswith(("DOMAIN", "DOMAIN-SUFFIX")):
                     if current_comments:
                         domain_rules.extend(current_comments)
-                        current_comments = [] # 用完清空
+                        current_comments = []
                     domain_rules.append(line)
-                
-                # 3. 如果是 IP 规则
+
+                # ⚠️ DOMAIN-KEYWORD 归入 classical
+                elif line.startswith("DOMAIN-KEYWORD"):
+                    if current_comments:
+                        classical_rules.extend(current_comments)
+                        current_comments = []
+                    classical_rules.append(line)
+
+                # 3️⃣ IP 类
                 elif line.startswith(("IP-CIDR", "IP-CIDR6")):
                     if current_comments:
                         ipcidr_rules.extend(current_comments)
-                        current_comments = [] # 用完清空
+                        current_comments = []
                     ipcidr_rules.append(line)
-                
+
+                # 4️⃣ 其他规则 → classical
                 else:
-                    # 如果遇到了既不是注释也不是匹配规则的行（如 USER-AGENT 等）
-                    # 清空当前暂存的注释，防止注释被错误地带到下一条不相关的规则
-                    current_comments = []
+                    if current_comments:
+                        classical_rules.extend(current_comments)
+                        current_comments = []
+                    classical_rules.append(line)
 
         # 写入 domain 文件
         if domain_rules:
@@ -60,3 +69,8 @@ for root, dirs, files in os.walk(SURGE_DIR):
         if ipcidr_rules:
             with open(os.path.join(clash_base, f"{name}_ipcidr.list"), "w", encoding="utf-8") as f:
                 f.write("\n".join(ipcidr_rules) + "\n")
+
+        # 写入 classical 文件
+        if classical_rules:
+            with open(os.path.join(clash_base, f"{name}_classical.list"), "w", encoding="utf-8") as f:
+                f.write("\n".join(classical_rules) + "\n")
